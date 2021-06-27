@@ -6,7 +6,7 @@ const os= require('os');
 // 계획
 // 1. 사용자가 원하는 폴더의 이름을 받아온다
 const folder = process.argv[2];
-const workingDir= path.join(os.homedir(),'Desktop','Pictures',folder);
+const workingDir= path.join(os.homedir(),'Desktop','ph',folder);
 
 if(!folder || !fs.existsSync(workingDir)){
     console.log('There are no such folder or directory!');
@@ -35,7 +35,7 @@ function processFiles(files){
         move(file,videoDir);
        } else if(isCapturedFile(file)){
            move(file,capturedDir);
-       } else if(isDuplicatedFile(file)){
+       } else if(isDuplicatedFile(files, file)){
            move(file,duplicatedDir);
        }
     });
@@ -44,18 +44,18 @@ function processFiles(files){
 function isVideoFile(file){
     ext=path.extname(file); //파일의 확장자
     if(ext ==='.mp4' || ext ==='.mov'){
-        return 1;
+        return true;
     } else{
-        return -1;
+        return false;
     }
 }
 
 function isCapturedFile(file){
     ext=path.extname(file); //파일의 확장자
     if(ext ==='.png' || ext ==='.aae'){
-        return 1;
+        return true;
     } else{
-        return -1;
+        return false;
     }
 }
 
@@ -74,7 +74,6 @@ function move(file,dir){
     const newPath=path.join(dir,file);
     fs.promises
     .rename(oldPath,newPath)
-    .then(() => console.log('Done!'))
     .catch((console.error));
 }
 
